@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: devsu-python-config
+data:
+  DEBUG: "1"
+  ALLOWED_HOSTS: "*"

@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devsu-python-app
+  labels:
+    app: devsu-python-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: devsu-python-app
+  template:
+    metadata:
+      labels:
+        app: devsu-python-app
+    spec:
+      containers:
+        - name: devsu-python-app
+          image: devsu-python-app:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - configMapRef:
+                name: devsu-python-config
+            - secretRef:
+                name: devsu-python-secret
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /api/
+              port: 8000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /api/
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
